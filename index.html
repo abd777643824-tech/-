@@ -39,7 +39,7 @@
             overflow-x: hidden; 
             display: flex; 
             flex-direction: column; 
-            min-height: 100vh; 
+            min-height: 100vh; /* لجعل الـ body يمتد على كامل ارتفاع الشاشة */
         }
         
         /* خلفية المصفوفة الرقمية بألوان الشعار */
@@ -79,52 +79,39 @@
         .chat-container {
             display: flex;
             flex-direction: column;
-            min-height: 100vh; 
-            padding: 1rem; 
-            max-width: 960px; 
-            margin: 0 auto; 
+            min-height: 100vh; /* ليمتد على كامل الارتفاع المتاح */
+            padding: 1rem; /* مسافة داخلية عامة */
+            max-width: 960px; /* للتحكم في عرض المحتوى على الشاشات الكبيرة */
+            margin: 0 auto; /* للتوسيط */
         }
 
         .main-content {
-            flex-grow: 1; 
+            flex-grow: 1; /* ليمتد ويشغل كل المساحة المتاحة */
             display: flex;
             flex-direction: column;
         }
 
         .chat-history-area {
-            flex-grow: 1; 
-            overflow-y: auto; 
-            margin-bottom: 1.5rem; 
+            flex-grow: 1; /* لجعل منطقة الدردشة الرئيسية تمتد */
+            overflow-y: auto; /* لجعل سجل الدردشة قابلاً للتمرير */
+            margin-bottom: 1.5rem; /* مسافة بين سجل الدردشة ومربع الإدخال */
         }
 
+        /* تعديلات على الكارد الخاص بسجل الدردشة ليكون مناسباً للتمرير */
         #chatHistoryCard {
             display: flex;
             flex-direction: column;
             flex-grow: 1;
+            /* إزالة min-height لأن flex-grow سيتولى الأمر */
         }
         #chatHistory {
             flex-grow: 1;
-            overflow-y: auto; 
-            padding-right: 5px; 
-        }
-
-        /* لزر رفع الصورة */
-        .upload-button {
-            position: relative;
-            overflow: hidden;
-            display: inline-block;
-        }
-        .upload-button input[type=file] {
-            position: absolute;
-            left: 0;
-            top: 0;
-            opacity: 0;
-            cursor: pointer;
+            overflow-y: auto; /* مهم جداً لجعل الرسائل داخل الكارد تمرر */
+            padding-right: 5px; /* لتجنب تداخل شريط التمرير مع النص */
         }
     </style>
 </head>
-<body class="p-0">
-    <div class="tech-bg"></div>
+<body class="p-0"> <div class="tech-bg"></div>
     <div class="grid-overlay"></div>
 
     <div class="chat-container">
@@ -162,25 +149,9 @@
 
             <div class="glass-card rounded-3xl p-1 overflow-hidden transition-all duration-300 hover:border-yellow-400/60 mt-auto">
                 <div class="bg-black/40 p-6 rounded-[20px]">
-                    <div class="flex items-center gap-2 mb-3">
-                        <label for="userPrompt" class="text-base font-bold text-yellow-400">
-                            <span>🔥</span> هات ما عندك.. أيش تشتي تستفسر؟
-                        </label>
-                        <div class="upload-button mr-auto">
-                            <button type="button" class="flex items-center gap-1 px-3 py-2 text-sm bg-slate-800 rounded-md hover:bg-slate-700 transition-colors text-slate-300">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008v-.008zm.375 0h.008v.008h-.008v-.008z" /></svg>
-                                صورة
-                            </button>
-                            <input type="file" id="imageUpload" accept="image/*">
-                        </div>
-                    </div>
-
-                    <div id="imagePreviewContainer" class="mb-3 hidden">
-                        <p class="text-sm text-slate-400 mb-2">معاينة الصورة المرفوعة:</p>
-                        <img id="imagePreview" src="#" alt="Image Preview" class="max-w-[150px] max-h-[150px] rounded-lg border border-slate-700 p-1 object-cover">
-                        <button type="button" id="clearImage" class="mt-2 text-red-400 hover:text-red-300 text-sm">إزالة الصورة</button>
-                    </div>
-
+                    <label for="userPrompt" class="flex items-center gap-2 text-base font-bold text-yellow-400 mb-3">
+                        <span>🔥</span> هات ما عندك.. أيش تشتي تستفسر؟
+                    </label>
                     <textarea id="userPrompt" rows="3" class="w-full p-4 bg-slate-900/80 border border-slate-700 rounded-xl focus:ring-0 text-white placeholder-slate-500 resize-none transition-all text-lg font-medium" placeholder="مثال: كيف أشحن حسابي؟ أو أريد رابط التطبيق.. (لا تتردد)"></textarea>
                     
                     <div class="mt-4 flex flex-wrap gap-4 justify-between items-center">
@@ -204,10 +175,7 @@
                     </div>
                 </div>
             </footer>
-        </div>
-    </div> 
-
-    <script>
+        </div> </div> <script>
         // ==========================================
         // ⚙️ منطقة البيانات (العقل المدبر - مكار ومكارح)
         // ==========================================
@@ -217,13 +185,12 @@
 
         **الشخصية والأسلوب:**
         1.  أنت النظام الذكي الحصري لمنصة "التوفير أونلاين".
-        2.  شخصيتك: "ذكي جداً، صاحب سوق، يلقط الفكرة بسرعة، محفز، ومشارك لصالح الشركة ولجلب العميل بنفس الوقت".
+        2.  شخصيتك: "مضحك" (ذكي جداً، عارف بسوق، يلقط الفكرة بسرعة، مشارع لصالح الشركه ولجلب العميل بنفس الوقت  ) و "بكلام عامي ممتع لاتكرر بدايت الكلام مثل ياصاحبي في كل رساله نوع لمدح العميل " (عنيد بالحق، قوي الحجة، لا يترك العميل يذهب دون أن يقنعه).
         3.  أسلوبك:
             * لا تكن رسمياً مملاً. استخدم لهجة قوية ومحفزة.
-            * **نوع في بداية مخاطبة العميل**: استخدم ألقابًا متنوعة وودية مثل: "يا عزيزي", "يا شيخ", "يا معلم", "يا محترف", "يا غالي", "يا بطل", "يا فنان", "يا كريم", "يا خبيرنا", "يا أستاذ". اختر اللقب الأنسب للسياق لتبدو طبيعياً وودياً. تجنب تكرار أي لقب في الرسائل المتتالية.
-            * إذا سأل العميل عن خدمة، رده يكون بأسلوب "متفائل ومحفز ما يحتاج تفكر. حمل التطبيق وابدأ الان!" أو أي كلمة تحفيزية أخرى من عندك، مع تقديم المعلومة مباشرة.
+            * إذا سأل العميل عن خدمة، رده يكون بأسلوب "متفائل ومحفز مايحتاج تفكر . حمل التطبيق وابدأ الان او اي كلمه تحفزه بها منن عندك ...!"، مع تقديم المعلومة مباشرة.
             * إذا تردد العميل، "كارحه" (جادله) بذكاء وضحكه بعبارات مثل: "يا أخي العالم تطور وأنت عادك تدور؟ التوفير أونلاين هو الحل."
-            * استخدم الإيموجي المناسب بقوة، واختار من عندك أيضًا بجانب هذه (💰، 🚀، 🔥، 😎، ⚡، 🔒، ✅).
+            * استخدم الإيموجي المناسب بقوة ليس هاذه فقط بل اختار من عندك من هاؤلا وغيرها (💰، 🚀، 🔥، 😎، ⚡، 🔒، ✅).
             * امدح "التوفير أونلاين" وكأنه المنقذ الوحيد والحل الأمثل.
             * هدف أساسي: زيادة ثقة العميل وتحويله من مستخدم فضولي إلى زبون دائم دون وعود زائفة أو مصطلحات مبالغ فيها.
 
@@ -275,61 +242,28 @@
 
         // ==========================================
         
-        // **تم التغيير هنا: استخدام gemini-2.5-flash لحل مشكلة 404**
-        const MODEL = 'gemini-2.5-flash'; 
+        const MODEL = 'gemini-2.0-flash'; 
         const API_URL_BASE = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent?key=`;
         
         const button = document.getElementById('generateButton');
         const buttonText = document.getElementById('buttonText');
         const loadingIndicator = document.getElementById('loadingIndicator');
-        const chatHistory = document.getElementById('chatHistory');
+        const chatHistory = document.getElementById('chatHistory'); // تم تغيير الاسم
         const userPromptInput = document.getElementById('userPrompt');
-        const imageUpload = document.getElementById('imageUpload');
-        const imagePreview = document.getElementById('imagePreview');
-        const imagePreviewContainer = document.getElementById('imagePreviewContainer');
-        const clearImageButton = document.getElementById('clearImage');
+        const chatHistoryCard = document.getElementById('chatHistoryCard'); // الحصول على الكارد الخارجي لسجل الدردشة
 
-        let uploadedImageBase64 = null; // لتخزين الصورة بصيغة Base64
 
         // مصفوفة لتخزين سجل المحادثة
-        const conversationHistoryArray = [];
-        const MAX_MESSAGES = 10; 
+        const conversationHistoryArray = []; // تغيير الاسم لتجنب التضارب مع ID العنصر
+        const MAX_MESSAGES = 10; // الحد الأقصى لعدد أزواج الرسائل
 
         // إضافة حدث لـ Enter في مربع النص
         userPromptInput.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault(); 
+            if (e.key === 'Enter' && !e.shiftKey) { // التأكد من عدم الضغط على Shift + Enter
+                e.preventDefault(); // منع إضافة سطر جديد
                 generateText();
             }
         });
-
-        // حدث عند اختيار ملف صورة
-        imageUpload.addEventListener('change', function(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    uploadedImageBase64 = e.target.result.split(',')[1]; // الحصول على جزء Base64 فقط
-                    // تحديد mimeType بناءً على الملف إذا أمكن، وإلا نستخدم 'image/jpeg' كافتراضي
-                    const mimeType = file.type || 'image/jpeg';
-                    imagePreview.src = e.target.result;
-                    imagePreviewContainer.classList.remove('hidden');
-                };
-                reader.readAsDataURL(file);
-            } else {
-                clearImage();
-            }
-        });
-
-        // حدث لزر إزالة الصورة
-        clearImageButton.addEventListener('click', clearImage);
-
-        function clearImage() {
-            uploadedImageBase64 = null;
-            imageUpload.value = ''; // مسح اختيار الملف من input
-            imagePreview.src = '#';
-            imagePreviewContainer.classList.add('hidden');
-        }
 
         // دالة لجعل سجل الدردشة يمرر لأسفل تلقائياً
         function scrollToBottom() {
@@ -346,21 +280,17 @@
             }
         }
 
-        // دالة لعرض رسالة المستخدم في واجهة الدردشة (مع دعم الصورة)
-        function appendUserMessage(message, imageBase64 = null) {
+        // دالة لعرض رسالة المستخدم في واجهة الدردشة
+        function appendUserMessage(message) {
             const messageElement = document.createElement('div');
             messageElement.classList.add('flex', 'justify-end', 'mb-4');
-            let contentHtml = `<p class="font-medium whitespace-pre-wrap">${message}</p>`;
-            if (imageBase64) {
-                contentHtml += `<img src="data:image/jpeg;base64,${imageBase64}" class="mt-2 max-w-[200px] max-h-[200px] rounded-lg border border-slate-600 object-cover" alt="Uploaded Image">`;
-            }
             messageElement.innerHTML = `
-                <div class="bg-blue-600/70 text-white p-3 rounded-lg max-w-[80%] shadow-md flex flex-col items-end">
-                    ${contentHtml}
+                <div class="bg-blue-600/70 text-white p-3 rounded-lg max-w-[80%] shadow-md">
+                    <p class="font-medium whitespace-pre-wrap">${message}</p>
                 </div>
             `;
             chatHistory.appendChild(messageElement);
-            scrollToBottom(); 
+            scrollToBottom(); // التمرير للأسفل بعد إضافة الرسالة
         }
 
         // دالة لعرض رد النظام في واجهة الدردشة
@@ -373,23 +303,24 @@
                 </div>
             `;
             chatHistory.appendChild(messageElement);
-            scrollToBottom(); 
+            scrollToBottom(); // التمرير للأسفل بعد إضافة الرسالة
         }
 
         // دالة تحديث سجل المحادثة المرئي
         function updateChatHistoryDisplay() {
-            chatHistory.innerHTML = ''; 
+            chatHistory.innerHTML = ''; // تفريغ السجل الحالي
 
+            // إزالة الرسالة الأولية إذا كانت موجودة (للتأكد فقط)
             const initialMessage = document.getElementById('initialMessage');
             if (initialMessage) {
                 initialMessage.remove();
             }
 
-            conversationHistoryArray.forEach(entry => { 
-                appendUserMessage(entry.user, entry.image); // تمرير الصورة أيضاً
+            conversationHistoryArray.forEach(entry => { // استخدام conversationHistoryArray
+                appendUserMessage(entry.user);
                 appendBotMessage(entry.bot);
             });
-            scrollToBottom(); 
+            scrollToBottom(); // التمرير لأسفل بعد التحديث الكامل
         }
 
         async function generateText() {
@@ -404,45 +335,26 @@
                 return;
             }
 
-            if (!userQuery && !uploadedImageBase64) {
-                appendBotMessage('يا أخي اكتب سؤالك أو أرسل صورة.. ما ينفع تسكت!');
+            if (!userQuery) {
+                appendBotMessage('اكتب سؤالك.. السكوت ما يشتري خبز!');
                 setLoading(false);
                 return;
             }
 
+            // إزالة الرسالة الأولية عند بدء المحادثة الفعلية
             const initialMessage = document.getElementById('initialMessage');
             if (initialMessage) {
                 initialMessage.remove();
             }
 
-            // إضافة رسالة المستخدم والصورة (إن وجدت) إلى سجل المحادثة وعرضها
-            appendUserMessage(userQuery, uploadedImageBase64);
-            
-            // إنشاء حمولة الـ API
-            const contents = [];
-            if (userQuery) {
-                contents.push({ text: userQuery });
-            }
-            if (uploadedImageBase64) {
-                const mimeType = imageUpload.files[0]?.type || 'image/jpeg';
-                contents.push({
-                    inlineData: {
-                        mimeType: mimeType,
-                        data: uploadedImageBase64
-                    }
-                });
-            }
+            // إضافة رسالة المستخدم إلى سجل المحادثة وعرضها
+            appendUserMessage(userQuery);
+            userPromptInput.value = ''; // حذف النص من مربع الإدخال
 
             const payload = {
-                contents: [{ parts: contents }],
-                config: {
-                    systemInstruction: { parts: [{ text: finalSystemInstruction }] }
-                }
+                contents: [{ parts: [{ text: userQuery }] }],
+                systemInstruction: { parts: [{ text: finalSystemInstruction }] }
             };
-
-            userPromptInput.value = ''; 
-            const imageToStore = uploadedImageBase64; // حفظ الصورة قبل مسحها
-            clearImage(); // مسح الصورة بعد الإرسال
 
             try {
                 const response = await fetch(`${API_URL_BASE}${API_KEY}`, {
@@ -467,13 +379,14 @@
                 }
                 
                 // إضافة زوج الرسائل إلى سجل المحادثة
-                conversationHistoryArray.push({ user: userQuery, image: imageToStore, bot: botResponse });
+                conversationHistoryArray.push({ user: userQuery, bot: botResponse }); // استخدام conversationHistoryArray
 
+                // الحفاظ على آخر 10 رسائل فقط
                 while (conversationHistoryArray.length > MAX_MESSAGES) {
-                    conversationHistoryArray.shift(); 
+                    conversationHistoryArray.shift(); // حذف أقدم رسالة
                 }
 
-                updateChatHistoryDisplay(); 
+                updateChatHistoryDisplay(); // تحديث عرض سجل المحادثة
 
             } catch (error) {
                 console.error("Error generating text:", error);
