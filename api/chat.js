@@ -1,21 +1,30 @@
 import fetch from 'node-fetch';
 
 export default async function handler(req, res) {
+    // التأكد أن الطلب هو من نوع POST فقط
     if (req.method !== 'POST') {
         return res.status(405).json({ message: 'Method Not Allowed' });
     }
 
     const { prompt } = req.body;
 
+    // التأكد أن هناك نص سؤال (prompt) في الطلب
     if (!prompt) {
         return res.status(400).json({ error: 'Prompt is required' });
     }
 
-    // المفتاح يتم استدعاؤه بشكل آمن من Vercel Environment Variables
+    // استدعاء المفتاح من متغيرات البيئة في Vercel بشكل آمن
     const API_KEY = process.env.GEMINI_API_KEY;
+
+    // التحقق من وجود المفتاح قبل إرسال الطلب لجوجل
+    if (!API_KEY) {
+        console.error("GEMINI_API_KEY is not set in Vercel Environment Variables.");
+        return res.status(500).json({ error: "خطأ داخلي: مفتاح API غير متوفر في الخادم." });
+    }
+
     const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${API_KEY}`;
 
-    // تعليمات النظام (محدثة بأحدث بياناتك)
+    // تعليمات النظام (محدثة ببياناتك)
     const SYSTEM_INSTRUCTION_PROMPT = `
 🚨 تعليمات الهوية الشاملة لـ "التوفير أونلاين" (Override):
 
@@ -85,11 +94,20 @@ export default async function handler(req, res) {
         });
 
         if (!apiResponse.ok) {
-            const errorData = await apiResponse.json();
-            console.error("Gemini API Error from Serverless Function:", errorData);
-            return res.status(apiResponse.status).json({
-                error: `خطأ من Gemini API: ${errorData.error?.message || apiResponse.statusText}`
-            });
+            const errorText = await apiResponse.text(); // قراءة النص كـ text بدلاً من JSON
+            console.error("Gemini API Error from Serverless Function:", apiResponse.status, errorText);
+            // محاولة تحليل الخطأ إذا كان JSON، وإلا عرض النص الخام
+            try {
+                const errorData = JSON.parse(errorText);
+                return res.status(apiResponse.status).json({
+                    error: `خطأ من Gemini API (${apiResponse.status}): ${errorData.error?.message || errorText}`
+                });
+            } catch (parseError) {
+                // إذا لم يكن نص الخطأ بصيغة JSON، نعرض النص الخام
+                return res.status(apiResponse.status).json({
+                    error: `خطأ من Gemini API (${apiResponse.status}): ${errorText}`
+                });
+            }
         }
 
         const result = await apiResponse.json();
@@ -98,7 +116,7 @@ export default async function handler(req, res) {
         res.status(200).json({ response: botResponse });
 
     } catch (error) {
-        console.error("Error in Serverless Function:", error);
+        console.error("Error in Serverless Function (fetch or parsing):", error);
         res.status(500).json({ error: `خطأ داخلي في الخادم: ${error.message}` });
     }
 }
