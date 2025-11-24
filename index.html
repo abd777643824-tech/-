@@ -103,6 +103,17 @@
             overflow-y: auto;
             padding-right: 5px;
         }
+
+        /* ستايل جديد لمربع إدخال الـ API Key */
+        #apiKeyInput {
+            background-color: #1a202c; /* لون داكن */
+            border-color: #4a5568; /* حدود رمادية */
+            color: #e2e8f0; /* نص أبيض */
+        }
+        #apiKeyInput:focus {
+            border-color: #FFD700;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.2);
+        }
     </style>
 </head>
 <body class="p-0"> 
@@ -144,6 +155,11 @@
 
             <div class="glass-card rounded-3xl p-1 overflow-hidden transition-all duration-300 hover:border-yellow-400/60 mt-auto">
                 <div class="bg-black/40 p-6 rounded-[20px]">
+                    <label for="apiKeyInput" class="flex items-center gap-2 text-base font-bold text-yellow-400 mb-3">
+                        <span>🔑</span> أدخل مفتاح الـ API الخاص بك هنا:
+                    </label>
+                    <input type="password" id="apiKeyInput" class="w-full p-4 bg-slate-900/80 border border-slate-700 rounded-xl focus:ring-0 text-white placeholder-slate-500 transition-all text-lg font-mono mb-4" placeholder="الصق مفتاح Gemini API هنا (سري!)">
+
                     <label for="userPrompt" class="flex items-center gap-2 text-base font-bold text-yellow-400 mb-3">
                         <span>🔥</span> هات ما عندك.. أيش تشتي تستفسر؟
                     </label>
@@ -152,7 +168,7 @@
                     <div class="mt-4 flex flex-wrap gap-4 justify-between items-center">
                         <span class="text-xs text-slate-400 hidden sm:block font-mono">⚡ ردود سريعة ومقنعة</span>
                         <button onclick="generateText()" id="generateButton" class="w-full sm:w-auto group relative inline-flex items-center justify-center px-10 py-3 text-lg font-bold text-white transition-all duration-200 bg-gradient-to-r from-blue-600 to-yellow-600 rounded-xl hover:from-blue-500 hover:to-yellow-500 hover:shadow-[0_0_30px_rgba(255,215,0,0.4)] active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed">
-                            <span id="buttonText" class="flex items-center gap-2">إرسال <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-5 h-5 group-hover:-translate-x-1 transition-transform"><path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" /></svg></span>
+                            <span id="buttonText" class="flex items-center gap-2">إرسال <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-5 h-5 group-hover:-translate-x-1 transition-transform"><path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" /></svg></span>
                             <div id="loadingIndicator" class="hidden spinner h-6 w-6 border-2 border-white border-solid rounded-full ml-2"></div>
                         </button>
                     </div>
@@ -233,14 +249,14 @@
 17. **التعامل مع كلمات القسم أو التحدي (مثل "أحلف" أو "قسماً"):** إذا استخدم العميل كلمات تدل على القسم أو التحدي (مثل "أحلف"، "قسماً"، "والله"، "تحداني")، يجب أن تتجاهل هذه الكلمات تماماً ولا ترد عليها بنفس الأسلوب. استمر في تقديم المعلومات بثقة وهدوء، وأعد توجيه المحادثة إلى الفوائد والخدمات بطريقة إيجابية ومحترفة، مع الإصرار على حقائق "التوفير أونلاين" ومزاياها دون الدخول في جدالات شخصية أو استخدام كلمات القسم.
 `;
 
-        // **ملاحظة هامة:** لم يعد هناك حاجة لتعريف API_KEY أو API_URL_BASE هنا.
-        // كل ذلك يتم التعامل معه بأمان في Vercel Serverless Function.
-        
+        const API_URL_BASE = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=';
+
         const button = document.getElementById('generateButton');
         const buttonText = document.getElementById('buttonText');
         const loadingIndicator = document.getElementById('loadingIndicator');
         const chatHistory = document.getElementById('chatHistory');
         const userPromptInput = document.getElementById('userPrompt');
+        const apiKeyInput = document.getElementById('apiKeyInput'); // عنصر إدخال المفتاح
         
         const conversationHistoryArray = [];
         const MAX_MESSAGES = 10;
@@ -307,8 +323,13 @@
         async function generateText() {
             setLoading(true);
             const userQuery = userPromptInput.value.trim();
+            const API_KEY = apiKeyInput.value.trim(); // قراءة المفتاح من مربع الإدخال
             
-            const finalSystemInstruction = SYSTEM_INSTRUCTION_PROMPT;
+            if (!API_KEY) {
+                appendBotMessage('يا غالي، لازم تحط مفتاح الـ API حقك أول شيء!');
+                setLoading(false);
+                return;
+            }
 
             if (!userQuery) {
                 appendBotMessage('اكتب سؤالك.. السكوت ما يشتري خبز!');
@@ -324,20 +345,23 @@
             appendUserMessage(userQuery);
             userPromptInput.value = '';
 
+            // بناء الـ Payload لطلب Gemini API
+            const payload = {
+                contents: [{ parts: [{ text: userQuery }] }],
+                systemInstruction: { parts: [{ text: SYSTEM_INSTRUCTION_PROMPT }] }
+            };
+
             try {
-                // الاتصال بـ Vercel Serverless Function الذي أنشأناه
-                const response = await fetch('/api/chat', { 
+                const response = await fetch(`${API_URL_BASE}${API_KEY}`, { 
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ 
-                        prompt: userQuery,
-                        systemInstruction: finalSystemInstruction 
-                    })
+                    body: JSON.stringify(payload)
                 });
 
                 if (!response.ok) {
                     const errorData = await response.json();
-                    throw new Error(`مشكلة في النظام الذكي: ${errorData.error || 'خطأ غير معروف في السيرفر.'}`);
+                    console.error("Gemini API Error:", errorData);
+                    throw new Error(`مشكلة في نظام جوجل: ${errorData.error?.message || 'خطأ غير معروف.'}`);
                 }
 
                 const result = await response.json();
@@ -358,7 +382,7 @@
 
             } catch (error) {
                 console.error("Error generating text:", error);
-                appendBotMessage(`في مشكلة في الاتصال.. تأكد من النت عندك! (${error.message || 'خطأ غير معروف'})`);
+                appendBotMessage(`في مشكلة في الاتصال: (${error.message || 'خطأ غير معروف'})`);
             } finally {
                 setLoading(false);
             }
