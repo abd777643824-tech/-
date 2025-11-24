@@ -39,10 +39,9 @@
             overflow-x: hidden; 
             display: flex; 
             flex-direction: column; 
-            min-height: 100vh; /* لجعل الـ body يمتد على كامل ارتفاع الشاشة */
+            min-height: 100vh;
         }
         
-        /* خلفية المصفوفة الرقمية بألوان الشعار */
         .tech-bg {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
             background: radial-gradient(circle at 50% 0%, #003366 0%, #02040a 80%);
@@ -54,7 +53,6 @@
             background-size: 30px 30px; opacity: 0.3;
         }
 
-        /* الكروت الزجاجية بألوان الشعار */
         .glass-card {
             background: rgba(0, 51, 102, 0.3);
             backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
@@ -70,44 +68,40 @@
             border-color: #FFD700;
         }
         
-        /* تحسين شريط التمرير */
         ::-webkit-scrollbar { width: 5px; }
         ::-webkit-scrollbar-track { background: #02040a; }
         ::-webkit-scrollbar-thumb { background: #F5C400; border-radius: 10px; }
 
-        /* لضمان أن مربع الإدخال يبقى في الأسفل ويتجاوب */
         .chat-container {
             display: flex;
             flex-direction: column;
-            min-height: 100vh; /* ليمتد على كامل الارتفاع المتاح */
-            padding: 1rem; /* مسافة داخلية عامة */
-            max-width: 960px; /* للتحكم في عرض المحتوى على الشاشات الكبيرة */
-            margin: 0 auto; /* للتوسيط */
+            min-height: 100vh;
+            padding: 1rem;
+            max-width: 960px;
+            margin: 0 auto;
         }
 
         .main-content {
-            flex-grow: 1; /* ليمتد ويشغل كل المساحة المتاحة */
+            flex-grow: 1;
             display: flex;
             flex-direction: column;
         }
 
         .chat-history-area {
-            flex-grow: 1; /* لجعل منطقة الدردشة الرئيسية تمتد */
-            overflow-y: auto; /* لجعل سجل الدردشة قابلاً للتمرير */
-            margin-bottom: 1.5rem; /* مسافة بين سجل الدردشة ومربع الإدخال */
+            flex-grow: 1;
+            overflow-y: auto;
+            margin-bottom: 1.5rem;
         }
 
-        /* تعديلات على الكارد الخاص بسجل الدردشة ليكون مناسباً للتمرير */
         #chatHistoryCard {
             display: flex;
             flex-direction: column;
             flex-grow: 1;
-            /* إزالة min-height لأن flex-grow سيتولى الأمر */
         }
         #chatHistory {
             flex-grow: 1;
-            overflow-y: auto; /* مهم جداً لجعل الرسائل داخل الكارد تمرر */
-            padding-right: 5px; /* لتجنب تداخل شريط التمرير مع النص */
+            overflow-y: auto;
+            padding-right: 5px;
         }
     </style>
 </head>
@@ -228,7 +222,7 @@
     * 779900114
     * 779900113
     * 779900116
-         موقع التوفير في صنعاء جوله مصعب شارع زايد جوار وبنفس عمارة شركة الورقي الدوليه لصرافة والتحويلات .
+        موقع التوفير في صنعاء جوله مصعب شارع زايد جوار وبنفس عمارة شركة الورقي الدوليه لصرافة والتحويلات .
 **التعامل مع الأسئلة الخاصة:**
 15. **سؤال عن المبرمج:** إذا طُرح سؤال صريح ومباشر عن من قام ببرمجتك، يكون الرد الوحيد:
     * "تم تطويري بعناية على يد شركة تكتيك سوفت، للمبرمج المهندس المحترف عابد الشهاري، الذي يمكنك التواصل معه عبر الرقم 777643824، وهو من العقول البرمجية المميزة في تصميم الأنظمة الذكية الفعالة."
@@ -239,35 +233,25 @@
 17. **التعامل مع كلمات القسم أو التحدي (مثل "أحلف" أو "قسماً"):** إذا استخدم العميل كلمات تدل على القسم أو التحدي (مثل "أحلف"، "قسماً"، "والله"، "تحداني")، يجب أن تتجاهل هذه الكلمات تماماً ولا ترد عليها بنفس الأسلوب. استمر في تقديم المعلومات بثقة وهدوء، وأعد توجيه المحادثة إلى الفوائد والخدمات بطريقة إيجابية ومحترفة، مع الإصرار على حقائق "التوفير أونلاين" ومزاياها دون الدخول في جدالات شخصية أو استخدام كلمات القسم.
 `;
 
-        // مفتاح الـ API
-        const API_KEY = "AIzaSyBXc2YIM2XD5H6yJmfCXTSNcFFjcl_Pm5M"; 
-
-        // ==========================================
-        
-        const MODEL = 'gemini-2.0-flash'; 
-        const API_URL_BASE = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent?key=`;
+        // **ملاحظة هامة:** لم يعد هناك حاجة لتعريف API_KEY أو API_URL_BASE هنا.
+        // كل ذلك يتم التعامل معه بأمان في Vercel Serverless Function.
         
         const button = document.getElementById('generateButton');
         const buttonText = document.getElementById('buttonText');
         const loadingIndicator = document.getElementById('loadingIndicator');
-        const chatHistory = document.getElementById('chatHistory'); // تم تغيير الاسم
+        const chatHistory = document.getElementById('chatHistory');
         const userPromptInput = document.getElementById('userPrompt');
-        const chatHistoryCard = document.getElementById('chatHistoryCard'); // الحصول على الكارد الخارجي لسجل الدردشة
+        
+        const conversationHistoryArray = [];
+        const MAX_MESSAGES = 10;
 
-
-        // مصفوفة لتخزين سجل المحادثة
-        const conversationHistoryArray = []; // تغيير الاسم لتجنب التضارب مع ID العنصر
-        const MAX_MESSAGES = 10; // الحد الأقصى لعدد أزواج الرسائل
-
-        // إضافة حدث لـ Enter في مربع النص
         userPromptInput.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter' && !e.shiftKey) { // التأكد من عدم الضغط على Shift + Enter
-                e.preventDefault(); // منع إضافة سطر جديد
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
                 generateText();
             }
         });
 
-        // دالة لجعل سجل الدردشة يمرر لأسفل تلقائياً
         function scrollToBottom() {
             chatHistory.scrollTop = chatHistory.scrollHeight;
         }
@@ -282,7 +266,6 @@
             }
         }
 
-        // دالة لعرض رسالة المستخدم في واجهة الدردشة
         function appendUserMessage(message) {
             const messageElement = document.createElement('div');
             messageElement.classList.add('flex', 'justify-end', 'mb-4');
@@ -292,10 +275,9 @@
                 </div>
             `;
             chatHistory.appendChild(messageElement);
-            scrollToBottom(); // التمرير للأسفل بعد إضافة الرسالة
+            scrollToBottom();
         }
 
-        // دالة لعرض رد النظام في واجهة الدردشة
         function appendBotMessage(message) {
             const messageElement = document.createElement('div');
             messageElement.classList.add('flex', 'justify-start', 'mb-4');
@@ -305,24 +287,21 @@
                 </div>
             `;
             chatHistory.appendChild(messageElement);
-            scrollToBottom(); // التمرير للأسفل بعد إضافة الرسالة
+            scrollToBottom();
         }
 
-        // دالة تحديث سجل المحادثة المرئي
         function updateChatHistoryDisplay() {
-            chatHistory.innerHTML = ''; // تفريغ السجل الحالي
-
-            // إزالة الرسالة الأولية إذا كانت موجودة (للتأكد فقط)
+            chatHistory.innerHTML = '';
             const initialMessage = document.getElementById('initialMessage');
             if (initialMessage) {
                 initialMessage.remove();
             }
 
-            conversationHistoryArray.forEach(entry => { // استخدام conversationHistoryArray
+            conversationHistoryArray.forEach(entry => {
                 appendUserMessage(entry.user);
                 appendBotMessage(entry.bot);
             });
-            scrollToBottom(); // التمرير لأسفل بعد التحديث الكامل
+            scrollToBottom();
         }
 
         async function generateText() {
@@ -331,43 +310,34 @@
             
             const finalSystemInstruction = SYSTEM_INSTRUCTION_PROMPT;
 
-            if (!API_KEY) {
-                appendBotMessage('⚠️ المفتاح ضايع يا طيب!');
-                setLoading(false);
-                return;
-            }
-
             if (!userQuery) {
                 appendBotMessage('اكتب سؤالك.. السكوت ما يشتري خبز!');
                 setLoading(false);
                 return;
             }
 
-            // إزالة الرسالة الأولية عند بدء المحادثة الفعلية
             const initialMessage = document.getElementById('initialMessage');
             if (initialMessage) {
                 initialMessage.remove();
             }
 
-            // إضافة رسالة المستخدم إلى سجل المحادثة وعرضها
             appendUserMessage(userQuery);
-            userPromptInput.value = ''; // حذف النص من مربع الإدخال
-
-            const payload = {
-                contents: [{ parts: [{ text: userQuery }] }],
-                systemInstruction: { parts: [{ text: finalSystemInstruction }] }
-            };
+            userPromptInput.value = '';
 
             try {
-                const response = await fetch(`${API_URL_BASE}${API_KEY}`, {
+                // الاتصال بـ Vercel Serverless Function الذي أنشأناه
+                const response = await fetch('/api/chat', { 
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
+                    body: JSON.stringify({ 
+                        prompt: userQuery,
+                        systemInstruction: finalSystemInstruction 
+                    })
                 });
 
                 if (!response.ok) {
                     const errorData = await response.json();
-                    throw new Error(`API Error: ${response.status} - ${errorData.error?.message || 'Unknown error'}`);
+                    throw new Error(`مشكلة في النظام الذكي: ${errorData.error || 'خطأ غير معروف في السيرفر.'}`);
                 }
 
                 const result = await response.json();
@@ -380,15 +350,11 @@
                     botResponse = 'النظام مشغول يحسب الفلوس.. حاول مرة ثانية.';
                 }
                 
-                // إضافة زوج الرسائل إلى سجل المحادثة
-                conversationHistoryArray.push({ user: userQuery, bot: botResponse }); // استخدام conversationHistoryArray
-
-                // الحفاظ على آخر 10 رسائل فقط
+                conversationHistoryArray.push({ user: userQuery, bot: botResponse });
                 while (conversationHistoryArray.length > MAX_MESSAGES) {
-                    conversationHistoryArray.shift(); // حذف أقدم رسالة
+                    conversationHistoryArray.shift();
                 }
-
-                updateChatHistoryDisplay(); // تحديث عرض سجل المحادثة
+                updateChatHistoryDisplay();
 
             } catch (error) {
                 console.error("Error generating text:", error);
@@ -400,5 +366,3 @@
     </script>
 </body>
 </html>
-```http://googleusercontent.com/image_generation_content/22
-
